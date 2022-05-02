@@ -53,7 +53,7 @@ def main():
 
 	# let's take an arbitrary number of random lines from our input and run
 	# them through the decoder!
-	for i in range(10):
+	for i in range(5):
 		# unsure how to sample from dataset! We need to figure this out.
 		input_ind = rng.integers(0, len(trainX))
 

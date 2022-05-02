@@ -52,7 +52,7 @@ def main(plot=False):
 	#print(trainX.shape)
 	#print(trainX)
 
-	num_assessments = 500
+	num_assessments = 5
 	correct_assessments = 0
 
 	# let's take an arbitrary number of random lines from our input and run
