@@ -1,11 +1,13 @@
-# this file is meant to create a small LSTM for testing whether or not the
-# dataset is usable.
+# This file has ballooned in size. It now initializes and trains the LSTM.
+# It imports data from the .json file that should be included in this folder.
+# If the .json file does not exist, make sure to call datasetMaker.py.
+#
+# Needs tensorflow, numpy, and sklearn to be installed.
 
 import tensorflow as tf
 import random
 import numpy as np
 import math
-import matplotlib as plt
 from pathlib import Path
 import json
 from sklearn.model_selection import train_test_split

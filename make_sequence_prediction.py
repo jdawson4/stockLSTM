@@ -19,7 +19,9 @@ import sys
 def loadData():
 	seed = 7
 	rng = np.random.default_rng(seed)
-	step = 100 # we set the step size here.
+	step = 100
+	# we set the step size here.
+	# Make sure that this matches the shape given in smallLSTM.py!
 
 	with open('dataset.json', 'r') as f:
 		data = json.load(f)
