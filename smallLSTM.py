@@ -79,7 +79,7 @@ def main():
 	# Not sure what the optimal rate is for our problem!
 	model.summary()
 
-	path_checkpoint = "model2.h5"
+	path_checkpoint = "model.h5"
 	file_checkpoint = Path(path_checkpoint)
 	es_callback = tf.keras.callbacks.EarlyStopping(
 		monitor="val_loss", min_delta=0, patience=7
