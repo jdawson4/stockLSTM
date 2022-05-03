@@ -1,0 +1,9 @@
+# ignore datasets--they're way too big to put on github haha
+*.json
+
+# we also don't want to be uploading model weights:
+*.h5
+
+# we also don't want to save the whole folder containing
+# the LSTM as it exists:
+single_output_lstm/
