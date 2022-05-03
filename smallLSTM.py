@@ -7,16 +7,13 @@
 import tensorflow as tf
 import random
 import numpy as np
-import math
+#import math
 from pathlib import Path
 import json
 from sklearn.model_selection import train_test_split
+from constants import *
 
 def loadData():
-	seed = 7
-	rng = np.random.default_rng(seed)
-	step = 25 # we set the step size here.
-
 	with open('dataset.json', 'r') as f:
 		data = json.load(f)
 
@@ -24,7 +21,6 @@ def loadData():
 	for line in data:
 		for i in range(0,len(line)-step-step, step):
 			d = i+step
-			#print(line[i:d])
 			X.append(line[i:d])
 			Y.append(line[d][0])
 	X = np.array(X).astype(np.float32)
@@ -34,13 +30,11 @@ def loadData():
 		X, Y, test_size = 0.3, random_state = seed, shuffle=True,
 	)
 
-	return trainX, testX, trainY, testY, step
+	return trainX, testX, trainY, testY
 
 # this is the function where our LSTM actually runs
 def main():
-	num_hiddens = 256 # let's declare the number up here!
-	num_epochs = 100 # and declare the epochs up here!
-	trainX, testX, trainY, testY, step = loadData()
+	trainX, testX, trainY, testY = loadData()
 	print('-----------------------------------------------------------------')
 	print("Dataset loaded")
 	print("Dataset size:", trainX.size)
@@ -73,7 +67,7 @@ def main():
 	model.add(tf.keras.layers.Dense(1))
 
 	model.compile(
-		loss='mse', optimizer=tf.keras.optimizers.Adam(learning_rate=0.0001)
+		loss='mse', optimizer=tf.keras.optimizers.Adam(learning_rate=lr)
 	)
 	# we can specify learning rate here!
 	# Not sure what the optimal rate is for our problem!
@@ -93,8 +87,6 @@ def main():
 	    save_best_only=True,
 	)
 
-	#print(trainY.shape)
-	#print(trainY[0].shape)
 	if(file_checkpoint.exists()):
 		model.load_weights(path_checkpoint)
 		print("Loaded weights from checkpoint", path_checkpoint)
@@ -104,7 +96,7 @@ def main():
 		x=trainX,
 		y=trainY,
 		epochs=num_epochs,
-		batch_size=8,
+		batch_size=batch_size,
 		callbacks=[es_callback, modelckpt_callback],
 		validation_data = (testX, testY)
 	)

@@ -10,18 +10,12 @@
 
 import numpy as np
 import tensorflow as tf
-import random
 import matplotlib.pyplot as plt
 import json
-from sklearn.model_selection import train_test_split
+import sys
+from constants import *
 
 def loadData():
-	seed = 7
-	rng = np.random.default_rng(seed)
-	step = 25
-	# we set the step size here.
-	# Make sure that this matches the shape given in smallLSTM.py!
-
 	with open('dataset.json', 'r') as f:
 		data = json.load(f)
 
@@ -29,48 +23,39 @@ def loadData():
 	for line in data:
 		for i in range(0,len(line)-step-step, step):
 			d = i+step
-			#print(line[i:d])
 			X.append(line[i:d])
 			Y.append(line[d][0])
 	X = np.array(X).astype(np.float32)
 	Y = np.array(Y).astype(np.float32)
 
-	trainX, testX, trainY, testY = train_test_split(
-		X, Y, test_size = 0.25, random_state = seed, shuffle=True
-	)
-
-	return trainX, testX, trainY, testY, step
+	return X, Y
 
 def main(plot=False):
-	rng = np.random.default_rng(3)
-	num_assessments = 5
+	X, Y = loadData()
+	rng = np.random.default_rng(seed)
+	#num_assessments = 5
 	model = tf.keras.models.load_model('single_output_lstm')
 	model.summary()
-
-	trainX, testX, trainY, testY, step = loadData()
-
-	#print(trainX.shape)
-	#print(trainX)
 
 	# let's take an arbitrary number of random lines from our input and run
 	# them through the decoder!
 	for i in range(num_assessments):
 		# unsure how to sample from dataset! We need to figure this out.
-		input_ind = rng.integers(0, len(trainX))
+		input_ind = rng.integers(0, len(X))
 
-		input_seq = trainX[input_ind:input_ind+1] # we feed this to the model
+		input_seq = X[input_ind:input_ind+1] # we feed this to the model
 
-		ground_truth = trainY[input_ind]
+		ground_truth = X[input_ind]
 		# we can compare the predicted vals to this!
 
 		prediction = model.predict(input_seq)[0,0]
 
 		print("On input", input_ind)
-		print("Ground truth:",ground_truth)
+		print("Ground truth:",ground_truth[-1])
 		print("Prediction:",prediction)
 		print('')
 
-		if(plotBool):
+		if(plot):
 			largestPrice = prediction
 			smallestPrice = float("Infinity")
 			i=0
@@ -83,7 +68,7 @@ def main(plot=False):
 					smallestPrice=price
 				plt.plot(i,price, marker="o", markersize=10, markeredgecolor="red", markerfacecolor="green")
 			i+=1
-			plt.plot(i,ground_truth, marker="o", markersize=10, markeredgecolor="red", markerfacecolor="green",label="Ground truth")
+			plt.plot(i,ground_truth[-1,0], marker="o", markersize=10, markeredgecolor="red", markerfacecolor="green",label="Ground truth")
 			plt.plot(i,prediction, marker="o", markersize=10, markeredgecolor="red", markerfacecolor="yellow", label="Prediction")
 
 			plt.legend(loc='upper left')
@@ -92,6 +77,8 @@ def main(plot=False):
 			plt.show()
 
 if __name__ == '__main__':
+	print("Intended usage:")
+	print("python make_single_prediction.py [displayPlots?]")
 	plotBool = False
 	try:
 		plotBool = (sys.argv[1].lower() in ['yes', 'plot', 'true'])

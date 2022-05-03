@@ -10,19 +10,12 @@
 
 import numpy as np
 import tensorflow as tf
-import random
 import matplotlib.pyplot as plt
 import json
-from sklearn.model_selection import train_test_split
 import sys
+from constants import *
 
 def loadData():
-	seed = 7
-	rng = np.random.default_rng(seed)
-	step = 25
-	# we set the step size here.
-	# Make sure that this matches the shape given in smallLSTM.py!
-
 	with open('dataset.json', 'r') as f:
 		data = json.load(f)
 
@@ -30,30 +23,21 @@ def loadData():
 	for line in data:
 		for i in range(0,len(line)-step-step, step):
 			d = i+step
-			#print(line[i:d])
 			X.append(line[i:d])
 			Y.append(line[d][0])
 	X = np.array(X).astype(np.float32)
 	Y = np.array(Y).astype(np.float32)
 
-	#trainX, testX, trainY, testY = train_test_split(
-	#	X, Y, test_size = 0.25, random_state = seed, shuffle=True
-	#)
-
-	return X, Y, step
+	return X, Y
 
 def main(plot=False):
-	num_assessments = 5
-	rng = np.random.default_rng(7)
+	X, Y = loadData()
+	rng = np.random.default_rng(seed)
 	model = tf.keras.models.load_model('single_output_lstm')
 	model.summary()
 
-	X, Y, step = loadData()
-
 	correct_assessments = 0
 
-	# let's take an arbitrary number of random lines from our input and run
-	# them through the decoder!
 	for i in range(num_assessments):
 		# unsure how to sample from dataset! We need to figure this out.
 		input_ind = rng.integers(1, len(X))
@@ -66,7 +50,7 @@ def main(plot=False):
 		for datum in ground_truth:
 			for moment in datum:
 				fullData.append(moment[0])
-		# fullData is now a list of 40 timesteps.
+		# fullData is now a list of [step_size] timesteps.
 		fullData = np.array(fullData).astype(np.float32)
 
 		predictions = list()
@@ -83,7 +67,7 @@ def main(plot=False):
 		diffInLen = len(fullData)-len(predictions)
 		newPredictions = list()
 		for j in range(len(fullData)):
-			if (i>=diffInLen):
+			if (j>=diffInLen):
 				for p in predictions:
 					newPredictions.append(p)
 				break
@@ -111,6 +95,8 @@ def main(plot=False):
 	)
 
 if __name__ == '__main__':
+	print("Intended usage:")
+	print("python make_sequence_prediction.py [displayPlots?]")
 	plotBool = False
 	try:
 		plotBool = (sys.argv[1].lower() in ['yes', 'plot', 'true'])
