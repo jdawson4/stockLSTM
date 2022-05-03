@@ -6,6 +6,8 @@ Requirements:
 2. Numpy
 3. Sklearn
 4. Matplotlib
+5. Python (I hope that's obvious)
+6. robin_stocks, an API for accessing RobinHood's historical data. Requires RobinHood sign-in credentials!
 
 Files:
 1. datasetMaker.py, which creates a file called "dataset.json" with data about stocks
