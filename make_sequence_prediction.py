@@ -19,7 +19,7 @@ import sys
 def loadData():
 	seed = 7
 	rng = np.random.default_rng(seed)
-	step = 100
+	step = 25
 	# we set the step size here.
 	# Make sure that this matches the shape given in smallLSTM.py!
 
@@ -43,16 +43,13 @@ def loadData():
 	return X, Y, step
 
 def main(plot=False):
-	rng = np.random.default_rng(144)
+	num_assessments = 5
+	rng = np.random.default_rng(7)
 	model = tf.keras.models.load_model('single_output_lstm')
 	model.summary()
 
 	X, Y, step = loadData()
 
-	#print(trainX.shape)
-	#print(trainX)
-
-	num_assessments = 5
 	correct_assessments = 0
 
 	# let's take an arbitrary number of random lines from our input and run
@@ -69,11 +66,8 @@ def main(plot=False):
 		for datum in ground_truth:
 			for moment in datum:
 				fullData.append(moment[0])
-				#print(moment)
 		# fullData is now a list of 40 timesteps.
 		fullData = np.array(fullData).astype(np.float32)
-
-		#print(input_seq.shape)
 
 		predictions = list()
 		while(len(predictions) < (step)):
@@ -104,17 +98,12 @@ def main(plot=False):
 			plt.legend(loc='upper left')
 			plt.show()
 
-		#print(input_seq.shape)
-		#print(fullData.shape)
-		#print(predictions.shape)
-
 		# let's run a simple test: let's figure out of the NN can accurately
 		# predict whether the stock will move higher or lower.
 		realStockClimbed = (input_seq[0,-1,0] < fullData[-1])
 		predictionClimbed = (input_seq[0,-1,0] < predictions[-1])
 		if(realStockClimbed==predictionClimbed):
 			correct_assessments+=1
-		#num_assessments+=1
 		if((i%(num_assessments/10))==0):
 			print("Iteration", i, "out of", num_assessments)
 	print("Our LSTM was correct",

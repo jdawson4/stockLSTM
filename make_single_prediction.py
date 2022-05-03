@@ -18,7 +18,7 @@ from sklearn.model_selection import train_test_split
 def loadData():
 	seed = 7
 	rng = np.random.default_rng(seed)
-	step = 100
+	step = 25
 	# we set the step size here.
 	# Make sure that this matches the shape given in smallLSTM.py!
 
@@ -41,10 +41,11 @@ def loadData():
 
 	return trainX, testX, trainY, testY, step
 
-def main():
+def main(plot=False):
 	rng = np.random.default_rng(3)
+	num_assessments = 5
 	model = tf.keras.models.load_model('single_output_lstm')
-	#model.summary()
+	model.summary()
 
 	trainX, testX, trainY, testY, step = loadData()
 
@@ -53,7 +54,7 @@ def main():
 
 	# let's take an arbitrary number of random lines from our input and run
 	# them through the decoder!
-	for i in range(5):
+	for i in range(num_assessments):
 		# unsure how to sample from dataset! We need to figure this out.
 		input_ind = rng.integers(0, len(trainX))
 
@@ -62,8 +63,6 @@ def main():
 		ground_truth = trainY[input_ind]
 		# we can compare the predicted vals to this!
 
-		#print(input_seq.shape)
-
 		prediction = model.predict(input_seq)[0,0]
 
 		print("On input", input_ind)
@@ -71,25 +70,34 @@ def main():
 		print("Prediction:",prediction)
 		print('')
 
-		largestPrice = prediction
-		smallestPrice = float("Infinity")
-		i=0
-		for datum in input_seq[0]:
-			price = datum[0]
+		if(plotBool):
+			largestPrice = prediction
+			smallestPrice = float("Infinity")
+			i=0
+			for datum in input_seq[0]:
+				price = datum[0]
+				i+=1
+				if price > largestPrice:
+					largestPrice = price
+				if price < smallestPrice:
+					smallestPrice=price
+				plt.plot(i,price, marker="o", markersize=10, markeredgecolor="red", markerfacecolor="green")
 			i+=1
-			if price > largestPrice:
-				largestPrice = price
-			if price < smallestPrice:
-				smallestPrice=price
-			plt.plot(i,price, marker="o", markersize=10, markeredgecolor="red", markerfacecolor="green")
-		i+=1
-		plt.plot(i,ground_truth, marker="o", markersize=10, markeredgecolor="red", markerfacecolor="green",label="Ground truth")
-		plt.plot(i,prediction, marker="o", markersize=10, markeredgecolor="red", markerfacecolor="yellow", label="Prediction")
+			plt.plot(i,ground_truth, marker="o", markersize=10, markeredgecolor="red", markerfacecolor="green",label="Ground truth")
+			plt.plot(i,prediction, marker="o", markersize=10, markeredgecolor="red", markerfacecolor="yellow", label="Prediction")
 
-		plt.legend(loc='upper left')
-		plt.ylim(smallestPrice-1,largestPrice+1)
-		plt.xlim(smallestPrice-1,i+1)
-		plt.show()
+			plt.legend(loc='upper left')
+			plt.ylim(smallestPrice-1,largestPrice+1)
+			plt.xlim(smallestPrice-1,i+1)
+			plt.show()
 
 if __name__ == '__main__':
-	main()
+	plotBool = False
+	try:
+		plotBool = (sys.argv[1].lower() in ['yes', 'plot', 'true'])
+	except:
+		pass
+	print("\n#################################################################")
+	print("Displaying plots =", plotBool)
+	print("\n#################################################################")
+	main(plotBool)

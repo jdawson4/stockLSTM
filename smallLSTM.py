@@ -15,7 +15,7 @@ from sklearn.model_selection import train_test_split
 def loadData():
 	seed = 7
 	rng = np.random.default_rng(seed)
-	step = 100 # we set the step size here.
+	step = 25 # we set the step size here.
 
 	with open('dataset.json', 'r') as f:
 		data = json.load(f)
@@ -110,22 +110,9 @@ def main():
 	)
 	print("Model fitted.")
 
+	# two different types of saves:
 	model.save("single_output_lstm")
 	model.save_weights(path_checkpoint)
-
-	# and maybe this code will work? I'm gonna go on a walk now,
-	# good luck little LSTM!
-
-	print("Predicting and evaluating model.")
-	#trainPredict = model.predict(trainX)
-	#testPredict= model.predict(testX)
-	#print(testPredict)
-	#predicted=np.concatenate((trainPredict,testPredict),axis=0)
-
-	#trainScore = model.evaluate(trainX, trainY, verbose=0)
-	testScore = model.evaluate(testX, testY, verbose=0)
-	print("Score:")
-	print(testScore)
 
 if __name__=="__main__":
     random.seed(a=7)
