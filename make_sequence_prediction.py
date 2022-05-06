@@ -54,7 +54,7 @@ def main(plot=False):
 		fullData = np.array(fullData).astype(np.float32)
 
 		predictions = list()
-		while(len(predictions) < (step)):
+		while(len(predictions) < (days_predicted)):
 			prediction = model.predict(input_seq)[0,0]
 			predictions.append(prediction)
 			newInputSeq = list()
