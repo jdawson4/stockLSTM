@@ -21,10 +21,11 @@ def loadData():
 
 	X, Y = [], []
 	for line in data:
-		for i in range(0,len(line)-step-step, skip_size):
+		for i in range(0,len(line)-step-(skip_size+distance_to_predict),skip_size):
 			d = i+step
+			e = d+distance_to_predict-1
 			X.append(line[i:d])
-			Y.append(line[d][0])
+			Y.append(line[e][0])
 	X = np.array(X).astype(np.float32)
 	Y = np.array(Y).astype(np.float32)
 
