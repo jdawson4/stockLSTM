@@ -64,10 +64,9 @@ def main(plot=False):
 			input_seq = np.array([newInputSeq]).astype(np.float32)
 		predictions = np.array(predictions).astype(np.float32)
 
-		diffInLen = len(fullData)-len(predictions)
 		newPredictions = list()
-		for j in range(len(fullData)):
-			if (j>=diffInLen):
+		for j in range(step+days_predicted):
+			if (j>=step):
 				for p in predictions:
 					newPredictions.append(p)
 				break
@@ -76,7 +75,7 @@ def main(plot=False):
 		predictions = np.array(newPredictions).astype(np.float32)
 
 		if(plot):
-			plt.plot(fullData, color='red',label="Ground truth")
+			plt.plot(fullData[:step+days_predicted], color='red',label="Ground truth")
 			plt.plot(predictions, color='blue',label="Prediction")
 
 			plt.legend(loc='upper left')
