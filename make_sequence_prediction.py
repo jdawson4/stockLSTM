@@ -7,6 +7,9 @@
 # describing a network that can translate english to french:
 # https://keras.io/examples/nlp/lstm_seq2seq/
 # We should cite them in our formal write-ups!
+#
+# I'd also like to note that this file is hideous, easily some of the
+# worse-looking code I've written all year.
 
 import numpy as np
 import tensorflow as tf
@@ -47,10 +50,16 @@ def main(plot=False):
 		ground_truth = X[input_ind:input_ind+2]
 		# we can compare the predicted vals to this!
 		fullData = list()
+		done=False
 		for datum in ground_truth:
 			for moment in datum:
 				fullData.append(moment[0])
-		# fullData is now a list of [step_size] timesteps.
+				if(len(fullData) > (step+num_assessments)):
+					done=True
+					break
+			if(done):
+				break
+		# fullData is now a list of [step_size+num_assessments] timesteps.
 		fullData = np.array(fullData).astype(np.float32)
 
 		predictions = list()
