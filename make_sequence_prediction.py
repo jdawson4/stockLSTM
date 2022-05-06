@@ -24,7 +24,7 @@ def loadData():
 
 	X, Y = [], []
 	for line in data:
-		for i in range(0,len(line)-step-step, step):
+		for i in range(0,len(line)-step-step, skip_size):
 			d = i+step
 			X.append(line[i:d])
 			Y.append(line[d][0])
