@@ -5,7 +5,7 @@
 step = 250
 batch_size = 8
 num_hiddens = 256
-lr = 0.001 # learning rate
+lr = 0.0001 # learning rate
 
 # Arbitrary choices:
 seed = 3
