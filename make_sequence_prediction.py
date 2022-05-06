@@ -35,6 +35,11 @@ def loadData():
 	return X, Y
 
 def main(plot=False):
+	if(distance_to_predict > 1):
+		print("Error: this file does not work on distance_to_predict > 1.")
+		print("Please try one of the other prediction files for visualization/testing!")
+		print('Alternatively, change the value of distance_to_predict in constants.py, retrain, and retry!')
+		return
 	X, Y = loadData()
 	rng = np.random.default_rng(seed)
 	model = tf.keras.models.load_model('single_output_lstm')
@@ -97,7 +102,7 @@ def main(plot=False):
 		predictionClimbed = (input_seq[0,-1,0] < predictions[-1])
 		if(realStockClimbed==predictionClimbed):
 			correct_assessments+=1
-		if((i%(num_assessments/10))==0):
+		if((i%(num_assessments//10))==0):
 			print("Iteration", i, "out of", num_assessments)
 	print("Our LSTM was correct",
 		str((correct_assessments/num_assessments)*100.0) + "% of the time!"

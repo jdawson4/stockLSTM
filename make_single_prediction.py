@@ -8,6 +8,8 @@
 # https://keras.io/examples/nlp/lstm_seq2seq/
 # We should cite them in our formal write-ups!
 
+from turtle import distance
+from matplotlib.markers import MarkerStyle
 import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
@@ -45,6 +47,7 @@ def main(plot=False):
 		input_ind = rng.integers(0, len(X))
 
 		input_seq = X[input_ind:input_ind+1] # we feed this to the model
+		nextStep = X[input_ind+1]
 
 		ground_truth = X[input_ind]
 		# we can compare the predicted vals to this!
@@ -57,24 +60,20 @@ def main(plot=False):
 		print('')
 
 		if(plot):
-			largestPrice = prediction
-			smallestPrice = float("Infinity")
 			i=0
+			groundTruthXToPlot = list()
+			groundTruthYToPlot = list()
 			for datum in input_seq[0]:
 				price = datum[0]
 				i+=1
-				if price > largestPrice:
-					largestPrice = price
-				if price < smallestPrice:
-					smallestPrice=price
-				plt.plot(i,price, marker="o", markersize=10, markeredgecolor="red", markerfacecolor="green")
-			i+=1
-			plt.plot(i,ground_truth[-1,0], marker="o", markersize=10, markeredgecolor="red", markerfacecolor="green",label="Ground truth")
-			plt.plot(i,prediction, marker="o", markersize=10, markeredgecolor="red", markerfacecolor="yellow", label="Prediction")
+				groundTruthYToPlot.append(price)
+				groundTruthXToPlot.append(i)
+			plt.plot(groundTruthXToPlot, groundTruthYToPlot, label='Ground Truth')
+			plt.plot(i+distance_to_predict,prediction, marker="o", markersize=5, markeredgecolor="red", markerfacecolor="yellow", label="Prediction")
 
 			plt.legend(loc='upper left')
-			plt.ylim(smallestPrice-1,largestPrice+1)
-			plt.xlim(smallestPrice-1,i+1)
+			#plt.ylim(smallestPrice-1,largestPrice+1)
+			#plt.xlim(smallestPrice-1,i+1)
 			plt.show()
 
 if __name__ == '__main__':
