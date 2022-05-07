@@ -98,7 +98,7 @@ def main(plot=False):
 
 		# let's run a simple test: let's figure out of the NN can accurately
 		# predict whether the stock will move higher or lower.
-		realStockClimbed = (input_seq[0,-1,0] < fullData[-1])
+		realStockClimbed = (input_seq[0,-1,0] < fullData[:step+days_predicted])
 		predictionClimbed = (input_seq[0,-1,0] < predictions[-1])
 		if(realStockClimbed==predictionClimbed):
 			correct_assessments+=1

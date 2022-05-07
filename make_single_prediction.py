@@ -53,10 +53,10 @@ def main(plot=False):
 
 		prediction = model.predict(input_seq)[0,0]
 
-		print("On input", input_ind)
-		print("Ground truth:",ground_truth)
-		print("Prediction:",prediction)
-		print('')
+		#print("On input", input_ind)
+		#print("Ground truth:",ground_truth)
+		#print("Prediction:",prediction)
+		#print('')
 
 		if(plot):
 			j=0

@@ -6,10 +6,10 @@
 # Arbitrary choices:
 seed = 4
 num_epochs = 100
-num_assessments = 512 # controls how many outputs the prediction scripts make
-days_predicted = 16 # controls how many days the prediction scripts will project outwards
+num_assessments = 32 # controls how many outputs the prediction scripts make
+days_predicted = 8 # controls how many days the prediction scripts will project outwards
 skip_size = 16 # controls the amount of overlap in the train/test sets (higher skip_size = less overlap)
-distance_to_predict = 5 # how many days in the future
+distance_to_predict = 1 # how many days in the future
 # is the LSTM trying to predict? 1 means that it will
 # predict tomorrow's price, 5 means the price a week from now, etc.
 # Effects training!
