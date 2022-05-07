@@ -69,14 +69,16 @@ def main(plot=False):
 				j+=1
 				groundTruthYToPlot.append(price)
 				groundTruthXToPlot.append(j)
-			plt.plot(groundTruthXToPlot, groundTruthYToPlot, label='Ground Truth')
-			plt.plot(j+distance_to_predict,prediction, marker="o", markersize=5, markeredgecolor="red", markerfacecolor="yellow", label="Prediction")
+			plt.plot(j+distance_to_predict,ground_truth, marker="x", markersize=5, markeredgecolor="blue", markerfacecolor="blue", label="Prediction Target")
+			plt.plot(groundTruthXToPlot, groundTruthYToPlot, label='Ground Truth',color='blue')
+			plt.plot(j+distance_to_predict,prediction, marker="o", markersize=5, markeredgecolor="red", markerfacecolor="yellow", label="LSTM Prediction")
 			plt.legend(loc='upper left')
 			plt.show()
 		realStockClimbed = (input_seq[0,-1,0] < ground_truth)
 		predictionClimbed = (input_seq[0,-1,0] < prediction)
 		if(realStockClimbed==predictionClimbed):
 			correct_assessments+=1
+	print("Performed", num_assessments,"tests.")
 	print("Our LSTM was correct",
 		str((correct_assessments/num_assessments)*100.0) + "% of the time!"
 	)

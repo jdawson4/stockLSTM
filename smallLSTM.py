@@ -64,11 +64,6 @@ def main():
 	model.add(tf.keras.layers.Dropout(0.2))
 	model.add(tf.keras.layers.LSTM(
 		num_hiddens//4,
-		return_sequences=True
-	))
-	model.add(tf.keras.layers.Dropout(0.2))
-	model.add(tf.keras.layers.LSTM(
-		num_hiddens//8,
 		return_sequences=False
 	))
 	model.add(tf.keras.layers.Dropout(0.2))
