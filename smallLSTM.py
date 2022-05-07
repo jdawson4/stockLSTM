@@ -62,6 +62,11 @@ def main():
 	model.add(tf.keras.layers.Dropout(0.2))
 	model.add(tf.keras.layers.LSTM(
 		num_hiddens//4,
+		return_sequences=True
+	))
+	model.add(tf.keras.layers.Dropout(0.2))
+	model.add(tf.keras.layers.LSTM(
+		num_hiddens//8,
 		return_sequences=False
 	))
 	model.add(tf.keras.layers.Dropout(0.2))
@@ -77,7 +82,7 @@ def main():
 	path_checkpoint = "model.h5"
 	file_checkpoint = Path(path_checkpoint)
 	es_callback = tf.keras.callbacks.EarlyStopping(
-		monitor="val_loss", min_delta=0, patience=7
+		monitor="val_loss", min_delta=0, patience=8
 	)
 
 	modelckpt_callback = tf.keras.callbacks.ModelCheckpoint(

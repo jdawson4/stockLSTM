@@ -8,8 +8,6 @@
 # https://keras.io/examples/nlp/lstm_seq2seq/
 # We should cite them in our formal write-ups!
 
-from turtle import distance
-from matplotlib.markers import MarkerStyle
 import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
@@ -39,6 +37,7 @@ def main(plot=False):
 	#num_assessments = 5
 	model = tf.keras.models.load_model('single_output_lstm')
 	model.summary()
+	correct_assessments = 0
 
 	# let's take an arbitrary number of random lines from our input and run
 	# them through the decoder!
@@ -47,34 +46,38 @@ def main(plot=False):
 		input_ind = rng.integers(0, len(X))
 
 		input_seq = X[input_ind:input_ind+1] # we feed this to the model
-		nextStep = X[input_ind+1]
+		# (I realize that this is a strange shape but trust me we need it like this)
 
-		ground_truth = X[input_ind]
+		ground_truth = Y[input_ind]
 		# we can compare the predicted vals to this!
 
 		prediction = model.predict(input_seq)[0,0]
 
 		print("On input", input_ind)
-		print("Ground truth:",ground_truth[-1])
+		print("Ground truth:",ground_truth)
 		print("Prediction:",prediction)
 		print('')
 
 		if(plot):
-			i=0
+			j=0
 			groundTruthXToPlot = list()
 			groundTruthYToPlot = list()
 			for datum in input_seq[0]:
 				price = datum[0]
-				i+=1
+				j+=1
 				groundTruthYToPlot.append(price)
-				groundTruthXToPlot.append(i)
+				groundTruthXToPlot.append(j)
 			plt.plot(groundTruthXToPlot, groundTruthYToPlot, label='Ground Truth')
-			plt.plot(i+distance_to_predict,prediction, marker="o", markersize=5, markeredgecolor="red", markerfacecolor="yellow", label="Prediction")
-
+			plt.plot(j+distance_to_predict,prediction, marker="o", markersize=5, markeredgecolor="red", markerfacecolor="yellow", label="Prediction")
 			plt.legend(loc='upper left')
-			#plt.ylim(smallestPrice-1,largestPrice+1)
-			#plt.xlim(smallestPrice-1,i+1)
 			plt.show()
+		realStockClimbed = (input_seq[0,-1,0] < ground_truth)
+		predictionClimbed = (input_seq[0,-1,0] < prediction)
+		if(realStockClimbed==predictionClimbed):
+			correct_assessments+=1
+	print("Our LSTM was correct",
+		str((correct_assessments/num_assessments)*100.0) + "% of the time!"
+	)
 
 if __name__ == '__main__':
 	print("Intended usage:")
