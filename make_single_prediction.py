@@ -1,3 +1,5 @@
+# Author: Jacob Dawson
+#
 # the goal of this script is to be able to load our pretrained model
 # and see if it can predict actual stock market movements.
 # this is where it all comes together!

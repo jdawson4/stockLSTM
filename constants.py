@@ -1,3 +1,5 @@
+# Author: Jacob Dawson
+#
 # Any and all constants should be moved here!
 # ESPECIALLY if they are shared between files!
 

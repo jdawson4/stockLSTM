@@ -1,3 +1,5 @@
+# Author: Jacob Dawson
+#
 # the goal of this script is to be able to load our pretrained model
 # and see if it can predict actual stock market movements.
 # this is where it all comes together!
@@ -21,27 +23,20 @@ from constants import *
 def loadData():
 	with open('dataset.json', 'r') as f:
 		data = json.load(f)
+	retData = list()
+	for datum in data:
+		retData.append(datum[0:1260])
 
-	X, Y = [], []
-	for line in data:
-		for i in range(0,len(line)-step-(skip_size+distance_to_predict),skip_size):
-			d = i+step
-			e = d+distance_to_predict-1
-			X.append(line[i:d])
-			Y.append(line[e][0])
-	X = np.array(X).astype(np.float32)
-	Y = np.array(Y).astype(np.float32)
-
-	return X, Y
+	return np.array(retData, dtype=np.float32)
 
 def main(plot=False):
+	rng = np.random.default_rng(seed)
 	if(distance_to_predict > 1):
 		print("Error: this file does not work on distance_to_predict > 1.")
 		print("Please try one of the other prediction files for visualization/testing!")
 		print('Alternatively, change the value of distance_to_predict in constants.py, retrain, and retry!')
 		return
-	X, Y = loadData()
-	rng = np.random.default_rng(seed)
+	data = loadData()
 	model = tf.keras.models.load_model('single_output_lstm')
 	model.summary()
 
@@ -49,28 +44,19 @@ def main(plot=False):
 
 	for i in range(num_assessments):
 		# unsure how to sample from dataset! We need to figure this out.
-		input_ind = rng.integers(1, len(X))
+		input_line_num = rng.integers(0, len(data))
+		input_line = data[input_line_num]
+		
+		input_ind = rng.integers(0, len(input_line)-step-days_predicted)
 
-		input_seq = X[input_ind:input_ind+1] # we feed this to the model
+		input_seq = input_line[input_ind:input_ind+step] # we feed this to the model
+		expectedPrediction = input_line[input_ind+step:input_ind+step+days_predicted,0]
+		input_seq = np.array([input_seq])
 
-		ground_truth = X[input_ind:input_ind+2]
-		# we can compare the predicted vals to this!
-		fullData = list()
-		done=False
-		for datum in ground_truth:
-			for moment in datum:
-				fullData.append(moment[0])
-				if(len(fullData) > (step+num_assessments)):
-					done=True
-					break
-			if(done):
-				break
-		# fullData is now a list of [step_size+num_assessments] timesteps.
-		fullData = np.array(fullData).astype(np.float32)
-
+		# make days_predicted predictions here
 		predictions = list()
 		while(len(predictions) < (days_predicted)):
-			prediction = model.predict(input_seq)[0,0]
+			prediction = model(input_seq)[0,0]
 			predictions.append(prediction)
 			newInputSeq = list()
 			for tuple in input_seq[0,1:]:
@@ -79,6 +65,7 @@ def main(plot=False):
 			input_seq = np.array([newInputSeq]).astype(np.float32)
 		predictions = np.array(predictions).astype(np.float32)
 
+		# now rephrase the predictions into a plot-able format
 		newPredictions = list()
 		for j in range(step+days_predicted):
 			if (j>=step):
@@ -89,8 +76,21 @@ def main(plot=False):
 				newPredictions.append(np.NaN)
 		predictions = np.array(newPredictions).astype(np.float32)
 
+		# and do the same for the expected predictions:
+		newExpectedPredictions = list()
+		for j in range(step+days_predicted):
+			if (j>=step):
+				for p in expectedPrediction:
+					newExpectedPredictions.append(p)
+				break
+			else:
+				newExpectedPredictions.append(np.NaN)
+		expectedPrediction = np.array(newExpectedPredictions).astype(np.float32)
+
+		# if we are told to plot, plot
 		if(plot):
-			plt.plot(fullData[:step+days_predicted], color='red',label="Ground truth")
+			plt.plot(input_line[input_ind:input_ind+step,0], color='red',label="Ground Truth")
+			plt.plot(expectedPrediction, color = 'yellow', label="Expected Prediction")
 			plt.plot(predictions, color='blue',label="Prediction")
 
 			plt.legend(loc='upper left')
@@ -98,8 +98,8 @@ def main(plot=False):
 
 		# let's run a simple test: let's figure out of the NN can accurately
 		# predict whether the stock will move higher or lower.
-		realStockClimbed = (input_seq[0,-1,0] < fullData[:step+days_predicted])
-		predictionClimbed = (input_seq[0,-1,0] < predictions[-1])
+		realStockClimbed = (input_line[input_ind:input_ind+step,0][-1] < expectedPrediction[-1])
+		predictionClimbed = (input_line[input_ind:input_ind+step,0][-1] < predictions[-1])
 		if(realStockClimbed==predictionClimbed):
 			correct_assessments+=1
 		if((i%(num_assessments//10))==0):

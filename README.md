@@ -1,5 +1,9 @@
 # stockLSTM
 A small, experimental LSTM for predicting stock prices.
+Author: Jacob Dawson
+
+<img src="images/Figure_1.png" alt="Example output" title="A good prediction!">
+<img src="images/Figure_2.png" alt="Occasionally, we make some really bad predictions" title="A bad prediction :(">
 
 Requirements:
 1. Tensorflow (best performance requires GPU speedup!)

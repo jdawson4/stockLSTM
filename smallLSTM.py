@@ -1,3 +1,5 @@
+# Author: Jacob Dawson
+#
 # This file has ballooned in size. It now initializes and trains the LSTM.
 # It imports data from the .json file that should be included in this folder.
 # If the .json file does not exist, make sure to call datasetMaker.py.

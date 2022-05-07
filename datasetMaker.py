@@ -1,3 +1,5 @@
+# Author: Jacob Dawson
+#
 # note: this file needs an internet connection AND login credentials to
 # robinhood! They connect to the internet in a sorta sketchy way, but
 # at least your credentials won't be saved to this device, in case you're

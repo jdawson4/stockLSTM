@@ -1,3 +1,5 @@
+# Author: Jacob Dawson
+#
 # ignore datasets--they're way too big to put on github haha
 *.json
 
