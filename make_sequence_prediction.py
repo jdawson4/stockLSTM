@@ -90,7 +90,7 @@ def main(plot=False):
 		# if we are told to plot, plot
 		if(plot):
 			plt.plot(input_line[input_ind:input_ind+step,0], color='red',label="Ground Truth")
-			plt.plot(expectedPrediction, color = 'yellow', label="Expected Prediction")
+			plt.plot(expectedPrediction, color = 'green', label="Expected Prediction")
 			plt.plot(predictions, color='blue',label="Prediction")
 
 			plt.legend(loc='upper left')
