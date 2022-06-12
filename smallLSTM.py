@@ -14,6 +14,7 @@ from pathlib import Path
 import json
 from sklearn.model_selection import train_test_split
 from constants import *
+from architecture import *
 
 def loadData():
 	with open('dataset.json', 'r') as f:
@@ -46,7 +47,7 @@ def main():
 	print("Number of hidden layers:", num_hiddens)
 	print('\n-----------------------------------------------------------------')
 
-	# this architecture takes in a sequence and guesses what one
+	'''# this architecture takes in a sequence and guesses what one
 	# week ahead will look like.
 	model = tf.keras.Sequential()
 	model.add(tf.keras.layers.InputLayer(
@@ -67,7 +68,9 @@ def main():
 		return_sequences=False
 	))
 	model.add(tf.keras.layers.Dropout(0.2))
-	model.add(tf.keras.layers.Dense(1))
+	model.add(tf.keras.layers.Dense(1))'''
+
+	model=createModel()
 
 	model.compile(
 		loss='mse', optimizer=tf.keras.optimizers.Adam(learning_rate=lr)

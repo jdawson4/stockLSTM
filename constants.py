@@ -10,15 +10,15 @@ seed = 4
 num_epochs = 100
 num_assessments = 32 # controls how many outputs the prediction scripts make
 days_predicted = 4 # controls how many days the prediction scripts will project outwards
-skip_size = 16 # controls the amount of overlap in the train/test sets (higher skip_size = less overlap)
+skip_size = 32 # controls the amount of overlap in the train/test sets (higher skip_size = less overlap)
 distance_to_predict = 1 # how many days in the future
 # is the LSTM trying to predict? 1 means that it will
 # predict tomorrow's price, 5 means the price a week from now, etc.
 # Effects training!
 
 # Hyperparameters/things which matter a lot for network construction:
-step = 256
-batch_size = 8
+step = 32
+batch_size = 64
 num_hiddens = 256
 initial_lr = 0.1
 #lr = CosineDecay(initial_lr, num_epochs) # learning rate as a schedule (didn't seem to work!)

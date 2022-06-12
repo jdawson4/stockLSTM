@@ -9,6 +9,8 @@
 # describing a network that can translate english to french:
 # https://keras.io/examples/nlp/lstm_seq2seq/
 # We should cite them in our formal write-ups!
+#
+# This file ONLY works for many-to-one architecture!
 
 import numpy as np
 import tensorflow as tf

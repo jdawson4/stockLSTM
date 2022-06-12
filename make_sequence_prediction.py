@@ -12,6 +12,8 @@
 #
 # I'd also like to note that this file is hideous, easily some of the
 # worse-looking code I've written all year.
+#
+# This file ONLY works for many-to-one architecture!
 
 import numpy as np
 import tensorflow as tf

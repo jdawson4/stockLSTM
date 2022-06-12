@@ -1,7 +1,8 @@
 # Author: Jacob Dawson
 #
 # ignore datasets--they're way too big to put on github haha
-*.json
+#*.json
+# eh screw it, what if we upload it anyway?
 
 # we also don't want to be uploading model weights:
 *.h5
