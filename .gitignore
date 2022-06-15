@@ -10,6 +10,7 @@
 # we also don't want to save the whole folder containing
 # the LSTM as it exists:
 single_output_lstm/
+stock_lstm/
 
 # we simply don't need the pycache:
 __pycache__/

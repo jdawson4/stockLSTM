@@ -22,11 +22,11 @@ def loadData():
 
 	X, Y = [], []
 	for line in data:
-		for i in range(0,len(line)-step-(skip_size+distance_to_predict),skip_size):
+		for i in range(0,len(line)-(2*step),skip_size):
 			d = i+step
-			e = d+distance_to_predict-1
+			e = d+step
 			X.append(line[i:d])
-			Y.append(line[e][0])
+			Y.append(line[d:e])
 	X = np.array(X).astype(np.float32)
 	Y = np.array(Y).astype(np.float32)
 
@@ -73,7 +73,9 @@ def main():
 	model=createModel()
 
 	model.compile(
-		loss='mse', optimizer=tf.keras.optimizers.Adam(learning_rate=lr)
+		loss='mse',
+		metrics=['accuracy',finalDistLoss],
+		optimizer=tf.keras.optimizers.Adam(learning_rate=lr)
 	)
 	# we can specify learning rate here!
 	# Not sure what the optimal rate is for our problem!
@@ -93,25 +95,27 @@ def main():
 	    save_best_only=True,
 	)
 
-	if(file_checkpoint.exists()):
-		model.load_weights(path_checkpoint)
-		print("Loaded weights from checkpoint", path_checkpoint)
-		# if we already have some training done, continue it!
+	#if(file_checkpoint.exists()):
+	#	model.load_weights(path_checkpoint)
+	#	print("Loaded weights from checkpoint", path_checkpoint)
+	#	# if we already have some training done, continue it!
+
 	print("Fitting model.")
 	model.fit(
 		x=trainX,
 		y=trainY,
 		epochs=num_epochs,
 		batch_size=batch_size,
-		callbacks=[es_callback, modelckpt_callback],
+		#callbacks=[es_callback, modelckpt_callback],
+		callbacks=[modelckpt_callback],
 		validation_data = (testX, testY)
 	)
 	print("Model fitted.")
 
 	# two different types of saves:
-	model.save("single_output_lstm")
+	#model.save("stock_lstm")
 	model.save_weights(path_checkpoint)
 
 if __name__=="__main__":
-    random.seed(a=7)
+    random.seed(a=seed)
     main()
